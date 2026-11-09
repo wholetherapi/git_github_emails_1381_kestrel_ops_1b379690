@@ -6,15 +6,13 @@ Last triaged: 2026-10-26
 ## Open Work Items
 
 - [ ] **src/kestrel/catalog/rate_card.py:12** - fall back to the base service rate when a premium service is missing
-- [ ] **src/kestrel/catalog/rate_card.py:17** - reject rate-card rows whose margin falls below the floor
-- [ ] **src/kestrel/catalog/rate_card.py:22** - honor the promo rate window before the long-term contract rate
-- [ ] **src/kestrel/catalog/rate_card.py:32** - flag rate cards that moved more than the drift threshold
-- [ ] **src/kestrel/catalog/rate_card.py:37** - publish the rate card only after the approval stamp is present
+- [ ] **src/kestrel/catalog/rate_card.py:28** - honor the promo rate window before the long-term contract rate
+- [ ] **src/kestrel/catalog/rate_card.py:38** - flag rate cards that moved more than the drift threshold
 - [ ] **src/kestrel/catalog/sku_index.py:12** - assign the internal SKU prefix when the carrier code is missing
 - [ ] **src/kestrel/catalog/sku_index.py:18** - resolve legacy carrier aliases to the current internal SKU
-- [ ] **src/kestrel/catalog/sku_index.py:23** - batch the SKU import to avoid a write per row
-- [ ] **src/kestrel/catalog/sku_index.py:34** - write a SKU audit row whenever a rate card references a new SKU
-- [ ] **src/kestrel/catalog/sku_index.py:39** - strip legacy whitespace from imported SKU codes
+- [ ] **src/kestrel/catalog/sku_index.py:38** - write a SKU audit row whenever a rate card references a new SKU
+- [ ] **src/kestrel/catalog/sku_index.py:43** - expose the SKU index snapshot endpoint to settlement for nightly matching
+- [ ] **src/kestrel/catalog/sku_index.py:48** - strip legacy whitespace from imported SKU codes
 
 ## Triage Notes
 
