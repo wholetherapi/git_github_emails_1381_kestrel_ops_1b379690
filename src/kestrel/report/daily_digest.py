@@ -14,8 +14,11 @@ def build_digest(snapshot):
 
 
 def dispute_count(snapshot):
-    # FIXME(wbranch): highlight disputes that crossed the two-day aging line
-    return sum(1 for d in snapshot.get("disputes", []) if d.get("age_days", 0) > 2)
+    aged = 0
+    for dispute in snapshot.get("disputes", []):
+        if int(dispute.get("age_days", 0)) >= 2:
+            aged += 1
+    return aged
 
 
 def intake_totals(snapshot):
@@ -29,8 +32,12 @@ def currency_totals(rows):
 
 
 def delivery_window(snapshot):
-    # TODO(dokoye): publish the digest after the last carrier cutoff has closed
-    return snapshot.get("cutoff", "23:00")
+    cutoffs = snapshot.get("carrier_cutoffs") or ["23:00"]
+    return max(cutoffs)
+
+
+def _window_label(window) -> str:
+    return f"cutoff-{window}"
 
 
 def digest_link(digest):

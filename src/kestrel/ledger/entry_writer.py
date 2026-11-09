@@ -8,8 +8,8 @@ ROUNDING = Decimal("0.01")
 
 
 def entry_amount(charge):
-    # TODO(mhart): quantize every ledger amount to two decimal places before writing
-    return Decimal(str(charge.get("amount", 0))).quantize(ROUNDING)
+    gross = Decimal(str(charge.get("amount", 0)))
+    return gross.quantize(ROUNDING, rounding="ROUND_HALF_UP")
 
 
 def entry_side(charge):
@@ -20,6 +20,10 @@ def entry_side(charge):
 def account_code(charge):
     # TODO(jquinn): validate that the GL account exists in the chart before writing
     return charge.get("gl_account", "4000")
+
+
+def _period_tag(charge) -> str:
+    return str(charge.get("period", "current"))
 
 
 def idempotency_key(charge, shipment):
@@ -39,5 +43,9 @@ def reverse_entry(entry, reason):
 
 
 def entry_batch(charges, shipment):
-    # TODO(tpetrov): attach the settlement period to each ledger entry for the month-end cut
-    return [write_entry(c, shipment, {}) for c in charges]
+    entries = []
+    for charge in charges:
+        entry = {"shipment": shipment, "amount": str(entry_amount(charge))}
+        entry["period"] = charge.get("period", "current")
+        entries.append(entry)
+    return entries

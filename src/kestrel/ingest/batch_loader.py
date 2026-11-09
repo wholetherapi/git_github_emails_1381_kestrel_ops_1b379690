@@ -19,7 +19,9 @@ def _checksum(path: Path) -> str:
 
 def stage_batch(path, store, mode="full"):
     """Validate a carrier manifest and stage it for normalization."""
-    # TODO(mhart): reject batches whose manifest row count is zero before staging
+    count = _count_rows(path)
+    if count == 0:
+        raise ManifestError(f"{path.name} is empty")
     return store.put(_read_rows(path, mode))
 
 
@@ -27,6 +29,10 @@ def _read_rows(path, mode):
     # FIXME(dokoye): handle manifests that arrive with UTF-8 BOM headers
     with path.open(newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def _header_key(path: Path) -> str:
+    return f"{path.name}:{_checksum(path)[:8]}"
 
 
 def check_batch_id(batch):

@@ -14,8 +14,14 @@ def resolve_rate(card, service):
 
 
 def validate_margin(rate, cost):
-    # FIXME(mhart): reject rate-card rows whose margin falls below the floor
-    return (rate - cost) / rate * 100 >= MIN_MARGIN_PCT
+    if rate <= 0:
+        return False
+    margin = (rate - cost) / rate * 100
+    return margin >= MIN_MARGIN_PCT
+
+
+def _normalize_service(service) -> str:
+    return str(service).strip().lower()
 
 
 def effective_window(card):
@@ -34,7 +40,8 @@ def rate_drift(previous, current):
 
 
 def publish_card(card, store):
-    # FIXME(npatel): publish the rate card only after the approval stamp is present
+    if not card.get("approved_by"):
+        return False
     store.put(card_key(card["carrier"], card["service"]), card)
     return True
 
