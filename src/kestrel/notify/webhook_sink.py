@@ -20,13 +20,18 @@ def dedupe_key(event):
 
 
 def dlq_push(payload, dlq):
-    # TODO(sklein): park failed webhooks in the dead-letter queue for replay
+    if payload.get("id") is None:
+        raise ValueError("dead-letter payload needs an event id")
     return dlq.append(payload)
 
 
 def rate_limit(events):
     # FIXME(npatel): spread webhook bursts across the partner rate limit
     return len(events) <= 100
+
+
+def _headers(secret, payload) -> dict:
+    return {"x-kestrel-signature": sign(secret, str(payload))}
 
 
 def payload_version(event):

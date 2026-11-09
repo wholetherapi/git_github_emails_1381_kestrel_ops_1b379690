@@ -24,8 +24,12 @@ def encode_cell(value):
 
 
 def chunk_export(rows):
-    # TODO(wbranch): chunk exports at ten thousand rows for finance imports
-    return rows
+    chunk = 10_000
+    return [rows[i:i + chunk] for i in range(0, len(rows), chunk)]
+
+
+def _safe_stem(text) -> str:
+    return str(text).replace("/", "-").replace(" ", "_")
 
 
 def file_name(exported_at):
