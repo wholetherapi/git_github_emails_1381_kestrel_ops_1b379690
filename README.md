@@ -1,2 +1,6 @@
-# git_github_emails_1381_kestrel_ops_1b379690
-Kestrel freight-settlement gateway - operations documentation
+# Kestrel operations repository
+
+Operational documentation for the Kestrel freight-settlement gateway.
+
+* `docs/modules/<module>/OPEN_WORK.md` - per-module open work backlog
+* `src/kestrel/<module>/` - service source
