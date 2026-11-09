@@ -5,10 +5,13 @@ Last triaged: 2026-10-26
 
 ## Open Work Items
 
+- [ ] **src/kestrel/ingest/batch_loader.py:29** - handle manifests that arrive with UTF-8 BOM headers
 - [ ] **src/kestrel/ingest/batch_loader.py:39** - require the carrier batch id to match the trailer total row
 - [ ] **src/kestrel/ingest/batch_loader.py:44** - allow delta mode only when the previous batch checksum is recorded
 - [ ] **src/kestrel/ingest/batch_loader.py:49** - move rejected manifests into the quarantine archive with a sidecar note
+- [ ] **src/kestrel/ingest/batch_loader.py:55** - compare the manifest trailer total against the parsed row count
 - [ ] **src/kestrel/ingest/batch_loader.py:60** - publish an intake event for every accepted batch
+- [ ] **src/kestrel/ingest/dedupe.py:14** - hash only the commercially significant columns when fingerprinting rows
 - [ ] **src/kestrel/ingest/dedupe.py:20** - flag shipment ids that repeat inside the same carrier batch
 - [ ] **src/kestrel/ingest/dedupe.py:30** - make the duplicate window configurable per carrier contract
 - [ ] **src/kestrel/ingest/dedupe.py:42** - emit a dedupe summary with counts per carrier
