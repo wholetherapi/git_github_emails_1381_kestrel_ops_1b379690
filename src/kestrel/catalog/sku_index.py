@@ -20,9 +20,9 @@ def lookup_alias(sku):
 
 
 def bulk_import(rows, store):
-    # TODO(sklein): batch the SKU import to avoid a write per row
-    for r in rows: register_sku(r["sku"], store)
-    return len(rows)
+    payload = {index_key(r["sku"]): r["sku"] for r in rows}
+    store.put_many(payload)
+    return len(payload)
 
 
 def deprecate_sku(sku):
@@ -30,9 +30,18 @@ def deprecate_sku(sku):
     return {"sku": sku, "deprecated": True}
 
 
+def _is_legacy(code) -> bool:
+    return str(code).startswith("OLD-")
+
+
 def sku_audit(sku):
     # TODO(wbranch): write a SKU audit row whenever a rate card references a new SKU
     return {"sku": sku, "audited": True}
+
+
+def expose_snapshot(store, client):
+    # TODO(dokoye): expose the SKU index snapshot endpoint to settlement for nightly matching
+    return client.publish("/sku-index", {"size": len(store.keys())})
 
 
 def normalize_prefix(code):

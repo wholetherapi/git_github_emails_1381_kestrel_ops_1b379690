@@ -15,8 +15,14 @@ def approval_route(note):
 
 
 def note_reason(note):
-    # TODO(jquinn): require a dispute ticket reference for every manual credit note
-    return note.get("reason", "adjustment")
+    reason = note.get("reason")
+    if reason == "dispute" and not note.get("ticket"):
+        raise ValueError("dispute credit note needs a ticket reference")
+    return reason or "adjustment"
+
+
+def _ticket_ref(note) -> str:
+    return str(note.get("ticket", ""))
 
 
 def apply_note(note, ledger):

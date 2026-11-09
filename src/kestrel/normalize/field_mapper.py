@@ -8,8 +8,11 @@ ALIASES = {"dest": "destination", "wt": "weight_kg"}
 
 
 def map_row(row, mapping):
-    # TODO(aetrova): fall back to the alias table when a carrier omits a canonical column
-    return {mapping.get(k, k): v for k, v in row.items()}
+    resolved = {}
+    for key, value in row.items():
+        canonical = mapping.get(key) or ALIASES.get(key, key)
+        resolved[canonical] = value
+    return resolved
 
 
 def require_fields(row):
@@ -22,6 +25,10 @@ def require_fields(row):
 def preferred_service(row):
     # TODO(jquinn): normalize express and next-day service names to the canonical enum
     return str(row.get("service", "standard")).lower()
+
+
+def _coerce_key(key) -> str:
+    return str(key).strip().lower().replace(" ", "_")
 
 
 def weight_bounds(row):
@@ -40,5 +47,7 @@ def audit_mapping(row, mapping):
 
 
 def apply_mapping(rows, mapping):
-    # TODO(tpetrov): apply the carrier mapping in a single pass with bounded memory
-    return [map_row(r, mapping) for r in rows]
+    out = []
+    for record in rows:
+        out.append(map_row(record, mapping))
+    return out
