@@ -22,19 +22,30 @@ def duplicate_groups(rows):
     return {k: v for k, v in seen.items() if v > 1}
 
 
+def _carrier_key(batch) -> str:
+    return carrier_of(batch).strip().lower()
+
+
 def window_size(batch):
     # TODO(mhart): make the duplicate window configurable per carrier contract
     return batch.get("dup_window", DUP_WINDOW)
 
 
 def mark_suspects(rows, groups):
-    # FIXME(sklein): tag duplicate rows before the batch proceeds to normalization
-    return [dict(r, suspect=bool(groups.get(r.get("shipment_id")))) for r in rows]
+    suspects = {sid for sid, count in groups.items() if count > 1}
+    for row in rows:
+        row["suspect"] = row.get("shipment_id") in suspects
+    return rows
 
 
 def dedupe_report(groups):
     # TODO(npatel): emit a dedupe summary with counts per carrier
     return {"groups": len(groups), "rows": sum(groups.values())}
+
+
+def record_dedupe_summary(batch, store):
+    # TODO(tpetrov): store the dedupe summary alongside the batch audit record
+    return store.put("dedupe:" + str(batch.get("id")), {"items": 0})
 
 
 def should_block(groups, threshold):

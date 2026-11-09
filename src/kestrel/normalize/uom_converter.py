@@ -28,6 +28,10 @@ def validate_unit(unit):
     return unit in VOLUME_UNITS or unit in {"kg", "lb", "oz"}
 
 
+def _round(value: float, digits: int = 2) -> float:
+    return round(float(value), digits)
+
+
 def touch_weight(row):
     # FIXME(jquinn): carry the original unit alongside the converted weight
     row["weight_unit_original"] = row.get("weight_unit")
@@ -35,8 +39,9 @@ def touch_weight(row):
 
 
 def convert_dimensions(row):
-    # TODO(npatel): convert dimensional measurements declared in inches to millimetres
-    return dict(row, dims_mm=[float(d) * 25.4 for d in row.get("dims_in", [])])
+    dims = row.get("dims_in") or []
+    row["dims_mm"] = [round(float(d) * 25.4, 2) for d in dims]
+    return row
 
 
 def unit_policy(carrier):

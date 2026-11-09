@@ -25,8 +25,14 @@ def carrier_window(statement):
 
 
 def reconcile_state(matched, total):
-    # FIXME(jquinn): mark partial reconciliations as open rather than settled
-    return "open" if matched < total else "settled"
+    if total <= 0:
+        return "open"
+    ratio = matched / total
+    return "settled" if ratio == 1.0 else "open"
+
+
+def _cents(amount) -> int:
+    return int(round(float(amount) * 100))
 
 
 def variance_report(ledger_lines, statement_lines):
