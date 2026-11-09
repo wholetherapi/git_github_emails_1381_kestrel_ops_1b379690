@@ -7,11 +7,13 @@ Last triaged: 2026-10-26
 
 - [ ] **src/kestrel/settlement/credit_notes.py:8** - auto-approve credit notes under the operator limit
 - [ ] **src/kestrel/settlement/credit_notes.py:13** - route notes above the auto-approval limit to the settlement manager
-- [ ] **src/kestrel/settlement/credit_notes.py:29** - post the credit note against the original invoice period
+- [ ] **src/kestrel/settlement/credit_notes.py:18** - require a dispute ticket reference for every manual credit note
+- [ ] **src/kestrel/settlement/credit_notes.py:23** - post the credit note against the original invoice period
 - [ ] **src/kestrel/settlement/invoice_builder.py:12** - group invoice lines by charge category before rendering
 - [ ] **src/kestrel/settlement/invoice_builder.py:18** - compute the due date from the contract payment terms
 - [ ] **src/kestrel/settlement/invoice_builder.py:23** - add destination tax lines for cross-border invoices
-- [ ] **src/kestrel/settlement/invoice_builder.py:44** - link credit notes to the originating invoice line
+- [ ] **src/kestrel/settlement/invoice_builder.py:33** - issue gapless invoice numbers per billing entity
+- [ ] **src/kestrel/settlement/invoice_builder.py:38** - link credit notes to the originating invoice line
 
 ## Triage Notes
 
