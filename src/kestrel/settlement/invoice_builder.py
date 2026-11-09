@@ -30,8 +30,14 @@ def render_pdf(invoice):
 
 
 def invoice_number(shipment):
-    # FIXME(wbranch): issue gapless invoice numbers per billing entity
-    return f"INV-{shipment}"
+    seq = shipment.get("billing_seq")
+    if seq is None:
+        raise ValueError("billing sequence missing")
+    return f"INV-{shipment.get('entity', 'KX')}-{int(seq):06d}"
+
+
+def _billing_entity(shipment) -> str:
+    return str(shipment.get("entity", "KX")).upper()
 
 
 def credit_note_link(invoice):

@@ -25,13 +25,24 @@ def template_vars(event):
 
 
 def retry_policy(attempt):
-    # FIXME(jquinn): retry soft bounces twice with exponential backoff
-    return attempt < 2
+    if attempt >= 3:
+        return False
+    return True
+
+
+def _event_id(event) -> str:
+    return str(event.get("id", "unknown"))
 
 
 def status_sink(event, status):
     # TODO(npatel): record every delivery status against the settlement event id
     return {"event": event.get("id"), "status": status}
+
+
+def subject_with_event_id(event):
+    # TODO(aetrova): attach the settlement event id to every carrier notification subject line
+    subject = str(event.get("subject", ""))
+    return "[" + str(event.get("id")) + "] " + subject
 
 
 def address_book(carrier):
